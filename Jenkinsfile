@@ -65,7 +65,7 @@ spec:
                       sh 'echo $KUBECONFIG'
                       sh 'cat $KUBECONFIG'
                       sh 'kubectl get pods -A'
-                      println ${REGISTRY}/${REPOSITORY}/${IMAGE}:${BUILD_NUMBER}
+                      sh "echo ${REGISTRY}/${REPOSITORY}/${IMAGE}:${BUILD_NUMBER}"
                   }
                 }
             }
