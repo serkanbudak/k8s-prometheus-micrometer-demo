@@ -42,7 +42,7 @@ spec:
         }
     }
     stages {
-      /*
+      
         stage('Build & Push Image') {
             environment {
                 PATH        = "/busybox:$PATH"
@@ -55,7 +55,7 @@ spec:
                     '''
                 }
             }
-        }*/
+        }
         
         stage('Deploy') {
             steps {
