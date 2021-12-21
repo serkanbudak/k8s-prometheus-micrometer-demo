@@ -65,7 +65,6 @@ spec:
                    
                   withKubeConfig([credentialsId: 'k8s-config']) {
                       sh 'echo $KUBECONFIG'
-                      sh 'cat $KUBECONFIG'
                       sh "helm upgrade --install example-app --set image.tag=${GIT_HASH} -n k8s-prometheus-micrometer-demo ./helm/example-app"
                       sh 'helm list -A'
                       
