@@ -4,7 +4,7 @@ pipeline {
   environment {
       REGISTRY    = 'index.docker.io' // Configure your own registry
       REPOSITORY  = 'srknbdk'
-      IMAGE       = 'hello'
+      IMAGE       = 'example-app'
     }
     agent {
         kubernetes {
@@ -64,6 +64,7 @@ spec:
                   withKubeConfig([credentialsId: 'k8s-config']) {
                       sh 'echo $KUBECONFIG'
                       sh 'cat $KUBECONFIG'
+                      sh 'helm upgrade --install example-app -n k8s-prometheus-micrometer-demo ./helm/example-app'
                       sh 'helm list -A'
                       
                   }
