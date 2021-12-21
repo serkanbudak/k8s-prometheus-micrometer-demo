@@ -57,7 +57,6 @@ spec:
         stage('Deploy') {
             steps {
                 container(name: 'kubectl') {
-                  checkout scm
                   withKubeConfig([credentialsId: 'k8s-config']) {
                       sh 'kubectl get pods -A'
                   }
