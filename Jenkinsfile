@@ -5,6 +5,7 @@ pipeline {
       REGISTRY    = 'index.docker.io' // Configure your own registry
       REPOSITORY  = 'srknbdk'
       IMAGE       = 'example-app'
+      GIT_HASH    = GIT_COMMIT.take(7)
     }
     agent {
         kubernetes {
@@ -51,20 +52,21 @@ spec:
                 git 'https://github.com/dstar55/docker-hello-world-spring-boot.git'
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
-                    /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${BUILD_NUMBER}
+                    /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_HASH}
                     '''
                 }
             }
         }
         
-        stage('Deploy') {
+        stage('Deployment k8s') {
             steps {
+                git 'https://github.com/dstar55/docker-hello-world-spring-boot.git'
                 container(name: 'k8s-helm') {
                    
                   withKubeConfig([credentialsId: 'k8s-config']) {
                       sh 'echo $KUBECONFIG'
                       sh 'cat $KUBECONFIG'
-                      sh 'helm upgrade --install example-app -n k8s-prometheus-micrometer-demo ./helm/example-app'
+                      sh "helm upgrade --install example-app --set image.tag=${GIT_HASH} -n k8s-prometheus-micrometer-demo ./helm/example-app"
                       sh 'helm list -A'
                       
                   }
