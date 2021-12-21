@@ -1,5 +1,9 @@
 
-pipeline {
+pipeline { 
+  
+  options {
+      disableConcurrentBuilds()
+  }
 
   environment {
       REGISTRY    = 'index.docker.io' // Configure your own registry
