@@ -49,7 +49,7 @@ spec:
                 PATH        = "/busybox:$PATH"
             }
             steps {
-                git 'https://github.com/dstar55/docker-hello-world-spring-boot.git'
+                checkout scm
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
                     /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${GIT_HASH}
@@ -60,7 +60,7 @@ spec:
         
         stage('Deployment k8s') {
             steps {
-                git 'https://github.com/dstar55/docker-hello-world-spring-boot.git'
+                checkout scm
                 container(name: 'k8s-helm') {
                    
                   withKubeConfig([credentialsId: 'k8s-config']) {
