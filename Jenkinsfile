@@ -15,8 +15,8 @@ metadata:
   name: k8s-cd
 spec:
   containers:
-  - name: kubectl
-    image: gcr.io/cloud-builders/kubectl
+  - name: k8s-helm
+    image: lachlanevenson/k8s-helm
     command:
     - cat
     tty: true  
@@ -42,7 +42,7 @@ spec:
         }
     }
     stages {
-      
+      /*
         stage('Build & Push Image') {
             environment {
                 PATH        = "/busybox:$PATH"
@@ -55,17 +55,17 @@ spec:
                     '''
                 }
             }
-        }
+        }*/
         
         stage('Deploy') {
             steps {
-                container(name: 'kubectl') {
+                container(name: 'k8s-helm') {
                    
                   withKubeConfig([credentialsId: 'k8s-config']) {
                       sh 'echo $KUBECONFIG'
                       sh 'cat $KUBECONFIG'
-                      sh 'kubectl get pods -A'
-                      sh "echo ${REGISTRY}/${REPOSITORY}/${IMAGE}:${BUILD_NUMBER}"
+                      sh 'helm list -A'
+                      
                   }
                 }
             }
