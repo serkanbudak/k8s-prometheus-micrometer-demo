@@ -1,11 +1,5 @@
 
 pipeline {
-    environment {
-        PATH        = "/busybox:$PATH"
-        REGISTRY    = 'index.docker.io' // Configure your own registry
-        REPOSITORY  = 'srknbdk'
-        IMAGE       = 'hello'
-    }
     agent {
         kubernetes {
             label 'kaniko'
@@ -44,20 +38,29 @@ spec:
     stages {
       /*
         stage('Build & Push Image') {
+            environment {
+                PATH        = "/busybox:$PATH"
+                REGISTRY    = 'index.docker.io' // Configure your own registry
+                REPOSITORY  = 'srknbdk'
+                IMAGE       = 'hello'
+            }
             steps {
-                checkout scm
+                git 'https://github.com/dstar55/docker-hello-world-spring-boot.git'
                 container(name: 'kaniko', shell: '/busybox/sh') {
                     sh '''#!/busybox/sh
                     /kaniko/executor -f `pwd`/Dockerfile -c `pwd` --cache=true --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}:${BUILD_NUMBER}
                     '''
                 }
             }
-        }*/
-        
+        }
+        */
         stage('Deploy') {
             steps {
                 container(name: 'kubectl') {
+                   
                   withKubeConfig([credentialsId: 'k8s-config']) {
+                      sh 'echo $KUBECONFIG'
+                      sh 'cat $KUBECONFIG'
                       sh 'kubectl get pods -A'
                   }
                 }
