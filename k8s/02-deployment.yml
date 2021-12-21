@@ -2,28 +2,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app
+  name: example-app
   namespace: k8s-prometheus-micrometer-demo
 spec:
   replicas: 3
   selector:
     matchLabels:
-      role: app
+      name: example-app
   template:
     metadata:
       labels:
-        role: app
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/path: "/actuator/prometheus"
-        prometheus.io/port:  "8080"
+        name: example-app
     spec:
       containers:
-        - name: app
+        - name: example-app
           image: alexandreroman/k8s-prometheus-micrometer-demo
           imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - name: web
+              containerPort: 8080
           livenessProbe:
             httpGet:
               port: 8080

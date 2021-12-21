@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    release: example-app
+  name: example-app
+  namespace: monitoring
+spec:
+  endpoints:
+    - path: /actuator/prometheus
+      port: web
+  namespaceSelector:
+    matchNames:
+      - k8s-prometheus-micrometer-demo
+  selector:
+    matchLabels:
+      name: example-app  
+
+      
